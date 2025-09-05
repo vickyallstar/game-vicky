@@ -7,6 +7,7 @@ const resultDiv = document.getElementById("result");
 
 let players = [];
 let selectedPlayer = null;
+let hasAnswered = false; // status apakah pemain sudah pilih truth/dare
 
 addPlayerBtn.addEventListener("click", () => {
   if (players.length >= 5) {
@@ -42,30 +43,36 @@ function renderPlayers() {
 
 randomBtn.addEventListener("click", () => {
   selectedPlayer = players[Math.floor(Math.random() * players.length)];
-  resultDiv.textContent = `🎯 Pemain terpilih: ${selectedPlayer}`;
+  hasAnswered = false; // reset status
+  resultDiv.innerHTML = `🎯 Pemain terpilih: <b>${selectedPlayer}</b>`;
   truthBtn.style.display = "inline-block";
   dareBtn.style.display = "inline-block";
 });
 
-async function fetchAPI(url) {
+async function fetchAPI(url, type) {
   if (!selectedPlayer) {
     resultDiv.textContent = "⚠️ Acak pemain dulu!";
+    return;
+  }
+  if (hasAnswered) {
+    resultDiv.textContent = "⚠️ Silakan acak pemain dulu!";
     return;
   }
   try {
     resultDiv.textContent = "⏳ Loading...";
     const res = await fetch(url);
     const data = await res.json();
-    resultDiv.textContent = `${selectedPlayer}: ${data.data || "Gagal ambil data"}`;
+    resultDiv.innerHTML = `<b>${selectedPlayer}</b> (${type}): ${data.data || "Gagal ambil data"}`;
+    hasAnswered = true; // pemain sudah pilih truth/dare
   } catch (err) {
     resultDiv.textContent = "❌ Error ambil data!";
   }
 }
 
 truthBtn.addEventListener("click", () => {
-  fetchAPI("https://api.sxtream.xyz/randomtext/truth");
+  fetchAPI("https://api.sxtream.xyz/randomtext/truth", "Truth");
 });
 
 dareBtn.addEventListener("click", () => {
-  fetchAPI("https://api.sxtream.xyz/randomtext/dare");
+  fetchAPI("https://api.sxtream.xyz/randomtext/dare", "Dare");
 });
