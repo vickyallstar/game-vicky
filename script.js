@@ -1,15 +1,16 @@
 const addPlayerBtn = document.getElementById("addPlayer");
 const playersDiv = document.getElementById("players");
-const gameBtns = document.getElementById("gameBtns");
+const randomBtn = document.getElementById("randomBtn");
 const truthBtn = document.getElementById("truthBtn");
 const dareBtn = document.getElementById("dareBtn");
 const resultDiv = document.getElementById("result");
 
 let players = [];
+let selectedPlayer = null;
 
 addPlayerBtn.addEventListener("click", () => {
-  if (players.length >= 4) {
-    alert("Maksimal 4 pemain!");
+  if (players.length >= 5) {
+    alert("Maksimal 5 pemain!");
     return;
   }
   const name = prompt("Masukkan nama pemain:");
@@ -28,19 +29,34 @@ function renderPlayers() {
     playersDiv.appendChild(div);
   });
 
-  if (players.length > 0) {
-    gameBtns.style.display = "block";
-    resultDiv.textContent = "👉 Pilih Truth atau Dare!";
+  if (players.length >= 2) {
+    randomBtn.style.display = "inline-block";
+    resultDiv.textContent = "👉 Klik Acak Pemain untuk memulai!";
+  } else {
+    randomBtn.style.display = "none";
+    truthBtn.style.display = "none";
+    dareBtn.style.display = "none";
+    resultDiv.textContent = "⚠️ Minimal 2 pemain untuk memulai!";
   }
 }
 
+randomBtn.addEventListener("click", () => {
+  selectedPlayer = players[Math.floor(Math.random() * players.length)];
+  resultDiv.textContent = `🎯 Pemain terpilih: ${selectedPlayer}`;
+  truthBtn.style.display = "inline-block";
+  dareBtn.style.display = "inline-block";
+});
+
 async function fetchAPI(url) {
+  if (!selectedPlayer) {
+    resultDiv.textContent = "⚠️ Acak pemain dulu!";
+    return;
+  }
   try {
     resultDiv.textContent = "⏳ Loading...";
     const res = await fetch(url);
     const data = await res.json();
-    const randomPlayer = players[Math.floor(Math.random() * players.length)];
-    resultDiv.textContent = `${randomPlayer}: ${data.result || "Gagal ambil data"}`;
+    resultDiv.textContent = `${selectedPlayer}: ${data.data || "Gagal ambil data"}`;
   } catch (err) {
     resultDiv.textContent = "❌ Error ambil data!";
   }

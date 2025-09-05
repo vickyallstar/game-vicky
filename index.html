@@ -57,8 +57,8 @@
       background: #f50057;
       transform: rotate(90deg);
     }
-    .game-btns {
-      margin: 30px 0 10px;
+    .game-btns, .play-btn {
+      margin: 20px 0;
     }
     button {
       padding: 12px 24px;
@@ -70,8 +70,8 @@
       font-weight: bold;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    .truth { background: #4CAF50; color: white; }
-    .dare { background: #FF5722; color: white; }
+    .truth { background: #4CAF50; color: white; display: none; }
+    .dare { background: #FF5722; color: white; display: none; }
     .truth:hover { 
       background: #43a047; 
       transform: scale(1.05); 
@@ -81,6 +81,14 @@
       background: #e64a19; 
       transform: scale(1.05); 
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .random-btn {
+      background: #2196f3;
+      color: white;
+    }
+    .random-btn:hover {
+      background: #1976d2;
+      transform: scale(1.05);
     }
     #result {
       margin-top: 20px;
@@ -101,11 +109,14 @@
   <h1>🎉 Truth or Dare 🎉</h1>
   <div class="players" id="players"></div>
   <button class="add-btn" id="addPlayer">+</button>
-  <div class="game-btns" style="display:none;" id="gameBtns">
+  <div class="play-btn">
+    <button class="random-btn" id="randomBtn" style="display:none;">Acak Pemain 🎲</button>
+  </div>
+  <div class="game-btns">
     <button class="truth" id="truthBtn">Truth</button>
     <button class="dare" id="dareBtn">Dare</button>
   </div>
-  <div id="result">👉 Tambah pemain dulu!</div>
+  <div id="result">👉 Tambah minimal 2 pemain dulu!</div>
   <script src="script.js"></script>
 </body>
 </html>
